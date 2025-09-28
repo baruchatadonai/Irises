@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra-Consistent Virtual Director</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0f0f23',
+                        'dark-card': '#1a1a2e',
+                        'accent-blue': '#3b82f6',
+                        'accent-purple': '#8b5cf6',
+                        'text-primary': '#e2e8f0',
+                        'text-secondary': '#94a3b8'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/refinements.css">
+</head>
+<body class="bg-dark-bg text-text-primary min-h-screen">
+    <!-- Header -->
+    <header class="bg-dark-card border-b border-gray-700 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-r from-accent-blue to-accent-purple rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">🎬</span>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-accent-blue to-accent-purple bg-clip-text text-transparent">
+                    Ultra-Consistent Virtual Director
+                </h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="saveProject" class="px-4 py-2 bg-accent-blue hover:bg-blue-600 rounded-lg transition-colors">
+                    Save Project
+                </button>
+                <button id="loadProject" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg transition-colors">
+                    Load Project
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Story Input & Controls -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- API Key Input -->
+                <div class="bg-dark-card rounded-xl p-6 border border-gray-700">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                        API Configuration
+                    </h2>
+                    <div class="space-y-3">
+                        <label class="block text-sm font-medium text-text-secondary">Google AI Studio API Key</label>
+                        <input 
+                            type="password" 
+                            id="apiKey" 
+                            placeholder="Enter your Gemini API key..."
+                            class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-transparent transition-all"
+                        >
+                        <button id="testApiKey" class="w-full px-4 py-2 bg-accent-purple hover:bg-purple-600 rounded-lg transition-colors">
+                            Test Connection
+                        </button>
+                        <div id="apiStatus" class="text-sm text-text-secondary"></div>
+                    </div>
+                </div>
+
+                <!-- Story Input Interface -->
+                <div class="bg-dark-card rounded-xl p-6 border border-gray-700">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="w-2 h-2 bg-accent-blue rounded-full mr-3"></span>
+                        Story Input
+                    </h2>
+                    
+                    <!-- Project Metadata -->
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-text-secondary mb-2">Project Name</label>
+                            <input 
+                                type="text" 
+                                id="projectName" 
+                                placeholder="My Story Project"
+                                class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-transparent transition-all"
+                            >
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-text-secondary mb-2">Genre</label>
+                                <select id="projectGenre" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-transparent transition-all">
+                                    <option value="thriller">Thriller</option>
+                                    <option value="drama">Drama</option>
+                                    <option value="action">Action</option>
+                                    <option value="romance">Romance</option>
+                                    <option value="sci-fi">Sci-Fi</option>
+                                    <option value="fantasy">Fantasy</option>
+                                    <option value="horror">Horror</option>
+                                    <option value="comedy">Comedy</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-text-secondary mb-2">Visual Style</label>
+                                <select id="visualStyle" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-transparent transition-all">
+                                    <option value="cinematic">Cinematic</option>
+                                    <option value="photorealistic">Photorealistic</option>
+                                    <option value="artistic">Artistic</option>
+                                    <option value="noir">Film Noir</option>
+                                    <option value="vibrant">Vibrant</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Story Text Area -->
+                    <div class="space-y-4">
+                        <label class="block text-sm font-medium text-text-secondary">Story Text</label>
+                        <textarea 
+                            id="storyText" 
+                            rows="8"
+                            placeholder="Enter your story here... The system will analyze characters, scenes, and generate consistent visual frames."
+                            class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-transparent transition-all resize-none"
+                        ></textarea>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-text-secondary">
+                                <span id="wordCount">0</span> words
+                            </span>
+                            <button id="analyzeStory" class="px-6 py-3 bg-gradient-to-r from-accent-blue to-accent-purple hover:from-blue-600 hover:to-purple-600 rounded-lg font-semibold transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="flex items-center">
+                                    <span id="analyzeText">Analyze Story</span>
+                                    <div id="analyzeSpinner" class="hidden ml-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Story Button -->
+                    <div class="mt-4 pt-4 border-t border-gray-700">
+                        <button id="loadSampleStory" class="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm">
+                            Load Sample Story (Detective Sarah Chen)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Character DNA Management -->
+                <div id="characterSection" class="bg-dark-card rounded-xl p-6 border border-gray-700 hidden">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="w-2 h-2 bg-accent-purple rounded-full mr-3"></span>
+                        Character DNA Profiles
+                    </h2>
+                    <div id="characterList" class="space-y-4">
+                        <!-- Character cards will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Frame Generation Controls -->
+                <div id="frameSection" class="bg-dark-card rounded-xl p-6 border border-gray-700 hidden">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Frame Generation
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-text-secondary">Generated Frames: <span id="frameCount">0</span></span>
+                            <button id="generateFrames" class="px-4 py-2 bg-accent-blue hover:bg-blue-600 rounded-lg transition-colors">
+                                Generate Frames
+                            </button>
+                        </div>
+                        <div id="frameList" class="space-y-2 max-h-64 overflow-y-auto">
+                            <!-- Frame items will be dynamically inserted here -->
+                        </div>
+                        <div class="pt-4 border-t border-gray-700">
+                            <button id="generateImages" class="w-full px-4 py-3 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="flex items-center justify-center">
+                                    <span id="generateImagesText">Generate All Images</span>
+                                    <div id="generateImagesSpinner" class="hidden ml-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Generated Gallery -->
+            <div class="lg:col-span-2">
+                <div class="bg-dark-card rounded-xl p-6 border border-gray-700">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold flex items-center">
+                            <span class="w-2 h-2 bg-yellow-500 rounded-full mr-3"></span>
+                            Generated Gallery
+                        </h2>
+                        <div class="flex items-center space-x-3">
+                            <div id="progressContainer" class="hidden flex items-center space-x-3">
+                                <div class="w-32 bg-gray-700 rounded-full h-2">
+                                    <div id="progressBar" class="bg-gradient-to-r from-accent-blue to-accent-purple h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <span id="progressText" class="text-sm text-text-secondary">0/0</span>
+                            </div>
+                            <button id="exportZip" class="px-4 py-2 bg-accent-purple hover:bg-purple-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                Export ZIP
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Image Gallery -->
+                    <div id="imageGallery" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Welcome message -->
+                        <div id="welcomeMessage" class="col-span-full text-center py-16">
+                            <div class="text-6xl mb-4">🎬</div>
+                            <h3 class="text-2xl font-semibold mb-2">Welcome to Virtual Director</h3>
+                            <p class="text-text-secondary max-w-md mx-auto">
+                                Enter your story above and click "Analyze Story" to begin generating consistent visual frames with advanced character DNA tracking.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals and Overlays -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div id="modalContent" class="bg-dark-card rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <!-- Modal content will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/google-ai.js"></script>
+    <script src="js/character-dna.js"></script>
+    <script src="js/frame-generation.js"></script>
+    <script src="js/image-generation.js"></script>
+    <script src="components/story-input.js"></script>
+    <script src="components/character-manager.js"></script>
+    <script src="components/frame-editor.js"></script>
+    <script src="components/image-gallery.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
